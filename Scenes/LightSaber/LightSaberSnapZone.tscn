@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://rt5ooq53iec6"]
+
+[ext_resource type="Script" uid="uid://cquqe4f1m1sw6" path="res://addons/godot-xr-tools/objects/snap_zone.gd" id="1_scrqr"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_scrqr"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_scrqr"]
+transparency = 1
+cull_mode = 1
+albedo_color = Color(0.49884123, 0.9201906, 0.83509946, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_qr4fj"]
+material = SubResource("StandardMaterial3D_scrqr")
+radius = 0.2
+height = 0.4
+
+[node name="LightSaberSnapZone" type="Area3D" unique_id=1030100871]
+collision_layer = 16
+collision_mask = 4
+script = ExtResource("1_scrqr")
+grab_distance = 0.2
+snap_require = "saber"
+metadata/_custom_type_script = "uid://cquqe4f1m1sw6"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=980739350]
+shape = SubResource("SphereShape3D_scrqr")
+debug_color = Color(0.90878636, 0.0001180166, 0.7372952, 0.41960785)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2051298847]
+mesh = SubResource("SphereMesh_qr4fj")

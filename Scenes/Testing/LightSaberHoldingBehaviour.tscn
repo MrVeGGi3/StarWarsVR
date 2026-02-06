@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://bwpae2sumtntk"]
+
+[ext_resource type="PackedScene" uid="uid://c3sijepp8sel8" path="res://Scenes/Player.tscn" id="1_x04s8"]
+[ext_resource type="Script" uid="uid://ci16fcf1s7an2" path="res://Scripts/xr_initializer.gd" id="3_sgiyq"]
+[ext_resource type="PackedScene" uid="uid://bkkm3wkyjng47" path="res://Scenes/BlasterTurret.tscn" id="4_6r7ci"]
+[ext_resource type="PackedScene" uid="uid://ulfn5mq72vwi" path="res://Scenes/LightSaber/LightSaber.tscn" id="4_twhho"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sgiyq"]
+sky_top_color = Color(0.07057259, 0.3746437, 1, 1)
+sky_horizon_color = Color(0.51186466, 0.558643, 0.7111786, 1)
+ground_bottom_color = Color(0.25473794, 0.13778043, 0.12256651, 1)
+ground_horizon_color = Color(0.51186466, 0.558643, 0.7111786, 1)
+
+[sub_resource type="Sky" id="Sky_6r7ci"]
+sky_material = SubResource("ProceduralSkyMaterial_sgiyq")
+
+[sub_resource type="Environment" id="Environment_twhho"]
+background_mode = 2
+sky = SubResource("Sky_6r7ci")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_72dnh"]
+albedo_color = Color(1, 0.6784314, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ubi41"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sgiyq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6r7ci"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_twhho"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_7nd4m"]
+data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+
+[node name="LightSaberHoldingBehaviour" type="Node3D" unique_id=1791445778]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=760110240]
+environment = SubResource("Environment_twhho")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=975102579]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1246760286]
+transform = Transform3D(16.188963, 0, 0, 0, 1, 0, 0, 0, 35.335567, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_72dnh")
+mesh = SubResource("BoxMesh_ubi41")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=322882139]
+collision_layer = 2
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=517309140]
+shape = SubResource("BoxShape3D_sgiyq")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=232876852]
+transform = Transform3D(-3.837727, 0, 0, 0, -1.5825324, 0, 0, 0, 0.37429202, 0.009156108, 1.0096278, -0.23621404)
+material_override = SubResource("StandardMaterial3D_6r7ci")
+mesh = SubResource("BoxMesh_twhho")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2" unique_id=416149744]
+collision_layer = 2
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D" unique_id=751827368]
+shape = SubResource("ConcavePolygonShape3D_7nd4m")
+
+[node name="Player" parent="." unique_id=437466854 instance=ExtResource("1_x04s8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2.0628545, 0, 0.58744, 1.2694763)
+current = true
+
+[node name="BlasterTurret" parent="." unique_id=725125303 instance=ExtResource("4_6r7ci")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0363374, 1.5307558, -3.519069)
+
+[node name="XRInitializer" type="Node3D" parent="." unique_id=1271201235]
+script = ExtResource("3_sgiyq")
+
+[node name="LightSaber" parent="." unique_id=1748064385 instance=ExtResource("4_twhho")]
+transform = Transform3D(0.0176444, 0.9998443, 0, -0.9998443, 0.0176444, 0, 0, 0, 1, 0, 1.8537807, -0.2121517)

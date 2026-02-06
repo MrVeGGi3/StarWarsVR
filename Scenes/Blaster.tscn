@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://cqem2kgi0lqc2"]
+
+[ext_resource type="Script" uid="uid://ctjup0ygjgym6" path="res://Scripts/blaster.gd" id="1_lo0j3"]
+[ext_resource type="Shader" uid="uid://dbmddc164xiw7" path="res://Shaders/blaster.gdshader" id="1_w0fuk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lo0j3"]
+render_priority = 0
+shader = ExtResource("1_w0fuk")
+shader_parameter/glow_color = Color(1, 0.1, 0.1, 1)
+shader_parameter/core_color = Color(1, 1, 1, 1)
+shader_parameter/core_sharpness = 3.0
+shader_parameter/emission_strength = 5.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_7jj6o"]
+material = SubResource("ShaderMaterial_lo0j3")
+radius = 0.025
+height = 1.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_w0fuk"]
+radius = 0.1
+height = 1.2
+
+[node name="Blaster" type="Area3D" unique_id=780146224]
+collision_layer = 8
+collision_mask = 7
+script = ExtResource("1_lo0j3")
+max_lifetime = 3.0
+swing_power = 0.8
+auto_aim_assist = 0.3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=906816328]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_7jj6o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=675122771]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_w0fuk")

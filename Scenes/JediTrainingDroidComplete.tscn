@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjo86cqusnqc1"]
+
+[ext_resource type="PackedScene" uid="uid://do0g2aenm34mt" path="res://3D Models/JediTrainingDroid/jedi_training_droid.glb" id="1_a3doe"]
+
+[node name="JediTrainingDroidComplete" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_a3doe")]
+
+[node name="Raycasts" type="Node3D" parent="."]
+
+[node name="RayCast3D" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(0.9022093, -0.43129858, 0, 0.43129858, 0.9022093, 0, 0, 0, 1, 0.074942954, 0.039840758, 0)
+target_position = Vector3(5, 0, 0)
+
+[node name="RayCast3D2" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(0.47556442, -0.58867824, 0.6536791, 0.839469, 0.5257975, -0.13721721, -0.2629261, 0.613999, 0.7442278, 0, 0, 0)
+target_position = Vector3(0, -5, 0)
+
+[node name="RayCast3D3" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(0.7440784, -9.994298e-09, -0.6680923, -0.5991267, -0.44249207, -0.66726893, -0.29562557, 0.8967724, -0.3292488, 0, 0, 0)
+target_position = Vector3(0, -5, 0)
+
+[node name="RayCast3D4" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(0.77626234, 0.5925346, -0.21521981, -0.093852706, 0.44621527, 0.8899909, 0.6233849, -0.6706674, 0.4019912, 0, 0, 0)
+target_position = Vector3(0, -5, 0)
+
+[node name="RayCast3D5" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(0.34403777, -0.6203816, -0.7048153, 0.8851666, 0.46470353, 0.023037512, 0.31323805, -0.63180476, 0.70901656, 0, 0, 0)
+target_position = Vector3(0, -5, 0)
+
+[node name="RayCast3D6" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(1, 0, 0, 0, -0.48599982, 0.8739589, 0, -0.8739589, -0.48599982, 0, 0, 0)
+target_position = Vector3(0, -5, 0)
+
+[node name="RayCast3D7" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(-0.4817429, 0.62618285, -0.61304057, -0.4031216, 0.4627967, 0.78950125, 0.7780853, 0.62746656, 0.029478714, 0, 0, 0)
+target_position = Vector3(0, -5, 0)
+
+[node name="RayCast3D8" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(-0.48068267, 0.8768946, 0, -0.8768946, -0.48068267, 0, 0, 0, 1, 0, 0, 0)
+target_position = Vector3(0, -5, 0)

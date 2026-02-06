@@ -1,0 +1,592 @@
+[gd_scene format=4 uid="uid://ulfn5mq72vwi"]
+
+[ext_resource type="Script" uid="uid://d0h43gdhyg4lk" path="res://Scripts/Lightsaber/lightsaberlaser.gd" id="1_66enu"]
+[ext_resource type="PackedScene" uid="uid://buh2so4lefi70" path="res://3D Models/LightSaber/ligth_saber_edited.tscn" id="2_hshof"]
+[ext_resource type="Script" uid="uid://cs2vlekc3d0ip" path="res://Scripts/Lightsaber/lightsaber.gd" id="3_y1yqq"]
+[ext_resource type="Shader" uid="uid://dbmddc164xiw7" path="res://Shaders/blaster.gdshader" id="4_mn0lu"]
+[ext_resource type="AudioStream" uid="uid://114nmjtyogxv" path="res://Audios/LightSaber/TurnOff.mp3" id="5_1urit"]
+[ext_resource type="AudioStream" uid="uid://bl7rnl5pslaim" path="res://Audios/LightSaber/TurnOn.mp3" id="6_ihqhx"]
+[ext_resource type="Script" uid="uid://xcr4nrayahcb" path="res://Scripts/Lightsaber/animation_settings.gd" id="7_h6o03"]
+[ext_resource type="Script" uid="uid://dy7mbm5ivhxoa" path="res://Scripts/Lightsaber/lightsaber_audios_manager.gd" id="8_5w0cf"]
+[ext_resource type="AudioStream" uid="uid://djkxpdeye3f02" path="res://Audios/LightSaber/lightsaber_swing.mp3" id="9_ocwbx"]
+[ext_resource type="AudioStream" uid="uid://yhfkdq33gmo6" path="res://Audios/LightSaber/LightsaberDeflectionI.mp3" id="10_foc2u"]
+[ext_resource type="PackedScene" uid="uid://dh8grd7s3n8kg" path="res://addons/godot-xr-tools/objects/grab_points/grab_point_snap.tscn" id="13_kku0w"]
+[ext_resource type="PackedScene" uid="uid://c25yxb0vt53vc" path="res://addons/godot-xr-tools/objects/grab_points/grab_point_hand_left.tscn" id="15_t1jmm"]
+[ext_resource type="PackedScene" uid="uid://ctw7nbntd5pcj" path="res://addons/godot-xr-tools/objects/grab_points/grab_point_hand_right.tscn" id="16_1dxh3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dmmj5"]
+radius = 0.033691406
+height = 0.3583374
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ffi7"]
+render_priority = 0
+shader = ExtResource("4_mn0lu")
+shader_parameter/glow_color = Color(0.3289177, 0.78929096, 3.85046e-07, 1)
+shader_parameter/core_color = Color(1, 1, 1, 1)
+shader_parameter/core_sharpness = 3.0
+shader_parameter/emission_strength = 5.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5g0v5"]
+material = SubResource("ShaderMaterial_1ffi7")
+top_radius = 0.013
+bottom_radius = 0.016
+height = 0.75
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ondbr"]
+radius = 0.05
+height = 1.0
+
+[sub_resource type="Animation" id="Animation_dmmj5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("CylinderMesh_5g0v5")]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.316, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.75]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_6dw1o"]
+resource_name = "Turned_Off"
+length = 0.001
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("CylinderMesh_5g0v5")]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.316, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.001]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_77l78"]
+resource_name = "Turned_On"
+length = 0.001
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("CylinderMesh_5g0v5")]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.506, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_1ffi7"]
+resource_name = "turn_off"
+length = 1.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("CylinderMesh_5g0v5")]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.10546552, 0.30620867, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.37868923, 0), Vector3(0, 0.2576416, 0), Vector3(0, 0.13443244, 0), Vector3(0, 0.017707944, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.10231729, 0.30148634, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [1.0, 0.75, 0.5, 0.25, 0.001]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/7/type = "audio"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("LightSaber/Audios/TurnOff")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("5_1urit")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/7/use_blend = true
+
+[sub_resource type="Animation" id="Animation_ondbr"]
+resource_name = "turn_on"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("CylinderMesh_5g0v5")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.26666668, 0.4, 0.56666666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.02504325, 0), Vector3(0, 0.1358338, 0), Vector3(0, 0.25764334, 0), Vector3(0, 0.38112736, 0), Vector3(0, 0.494, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.13722475, 0.26666668, 0.4, 0.53333336),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.001, 0.25, 0.5, 0.75, 1.0]
+}
+tracks/7/type = "audio"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("LightSaber/Audios/TurnOn")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("6_ihqhx")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/7/use_blend = true
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_o8w86"]
+_data = {
+&"RESET": SubResource("Animation_dmmj5"),
+&"Turned_Off": SubResource("Animation_6dw1o"),
+&"Turned_On": SubResource("Animation_77l78"),
+&"turn_off": SubResource("Animation_1ffi7"),
+&"turn_on": SubResource("Animation_ondbr")
+}
+
+[sub_resource type="AudioStreamMP3" id="AudioStreamMP3_77l78"]
+data = PackedByteArray("//OAxAAAAAAAAAAAAFhpbmcAAAAPAAAAHQAAFg0AERERHx8fKSkpKTIyMjk5OTlCQkJKSkpKUlJSWlpaWmFhYWpqanFxcXF6enqDg4ODi4uLlJSUlJubm6SkpKSsrKy1tbW8vLy8xcXFzc3NzdXV1d3d3d3m5ub39/f3/v7+////AAAAUExBTUUzLjEwMARuAAAAAAAAAAAVCCQEXiEAAeAAABYNCFGMzQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/zsMQAHiAq0b9GAAEANNyW3b/7hCDkyZMmnZAAAMAAPPDw8MAAAAAA8PP6GAAAAAAeHh4eGAAAAAAeHh4/XgAAAB4eHh4YAAAAAB4eHj/wAAAADw8PDwwAAAAADw8PD1v/4AeHv/AAABGg8PDw9IAABn/////////gAf/+Hh4f////0PD1AAlnGkvc+tkbTiZJRiWRmIAIYsbJqkHGHjgajJJnEnmBgKAowRNIzaETGQwAAFLOCwrampmgjJi0YUJJ0vgLUHBvyii4SjSZUDLliL7IOsGTSWFdVMGIQwvhRdkrSU4CQJuLlNepXJbmuplSwrtL6Q8beRrXa7AEPONVnYA08MTlfXbsyh2ZXTOnWgqtTU1DIZyM0GnbfrvZuRfLaWOTsETsalkqlU5NX7mp69DlPU5vOklccllHqw/MWk0/2iqUr6U8bpZRK4fhugbLjPSyas4a+e/K7YpqsqtR2bqUVNBcavWZBazv//OgxOdLtBaZv5zIAFPHL9Fjc7Y5XocctYU2G+VpZh2tT16kur09WzjnhNV5buT3pq1PVeXJrLO9UtXbfO285zus6Xk3bnbtujvW8K8pv1fpaXdJfQDy79vv/tc24kca8CijrqiZ6YgUNSMeBf1oFPc+WzvZ+5zc/DVSuOEEegpA8FIRmCOdAZEYUsIwoWcHzCMURTVJbpjTjy4LGUOlqR6aM9aJMGDWIslrlsaMFxQiGNMqINx/WQfqwtQ+iTtpWNBosIIxj5qXY8fa1z6zdUyQjzTtCjYhKiptNbaU2Na2KIG2q2N66TueoSB92NyeoWWhZu4hqtZmd6q6Koyo4ONknpUgeyoA5TXb7XazK3iMucI+iEmQojKgqNpB0CqHqmMPxAoqVeI3IDodHFDZQ2aMS1ZoTr5IQv/zgMTkLEwSvb/ZQAA8RLPELC/oYJpSijtNDE10zs+oTEyyGReKY09jF16uKtufVMgluH+drfPeZt8UWbaMv++4a2Um8Gt+vxuHOUl9amufjMc7H2Tpistn1qZ7+79umaX/5+T1a33t3e37/Nu/n/hm1/3ZSS/rOVNoxNfEEhio9ugFV0TVAAUa8v+21trfjSh4qPOi80KnC4VEOjqeigFGzgQJwsT6SNo1CWLROJgoeJ6+5uRWaYfw8aSieNCTUKidOkTry5MFoks3F4BKYVT/83DE9SqMBrm+0kyVhWURn22DORmDZNyEE5B7EI5iz93L49b0vSd8BCZizKOfzcyM5/Ee5DPTjPXslb/qZeK3N2uUa18mlPNi1Qc9zyMQWjJDwjZ342VuC2tSzBAGY9r//tZc8zMgWZFghgRQcXvmEBxQqA4viLVyXrGpcMCWjOuP7RHFR7etsULcT9oV9Mbulv7C1Mm1q7bC4UQUxQRr08IHdQFTGEQZ3gVCGIoE5PEaiw6Ebv/zYMTzJjv2vl7KRn1Ccw7+HitZMMKJVH0KKsDYNWQsPMUUQjl9qcOmQp65mmd6elzu/ZokKwdyJTRMxt3zVNVJ5kUhmjZudoZRssTkZdCAVCPgZ7sDFHUAePbf7/W3MTFDyc5pS5mp7DiuLZbP70l2oDwcWEyFNpK3jIvCzcqLJVHoJxkmH0JGoSLI1GG4Gm0YKOG6EU3VzY4ltP/zcMTpKRwWvl7TBnzJVc9B0WCiVczDjGD2HonJBbOau8uN6F6GQJP49Th2xyN0O7U5CV8RQrvhIsWGkpP5yprpaR82j3h12Ta1N2CHnD7DLa4UkRwaNuhxVsIg9fCIaDrKALd2t/2ttymafw3hC1Mks4gNQXodVr7GM796zgLgceRjAkISJAWME6JDfa0jk2iWuqfibhx068l5VNdqKCSMnU+pNzoyvjG5icbVm6ZITeolsL1l//NwxO0mG/7BvspGfVx700oYxBU9C45ESb2pp+bmxdFr506NOoRekpqxBjLpqJjFtcmdeQnqlNOG0hVEnCKfHxZVIZ4D33I1DxFUhdfBsjvZBIGBOLBFALkte++tlrEy5QP/VvSWTzjQCbftQxKLUdrzEUmaSB38pZUJAdBphUOIyIgJ0M1Tzbaylvd+0tG7QYlAgvpa1mtDJKupC0TFZO985F78kuWVs+iyUWF0pQhQQ8gtYEL/82DE/Sd8Fr2+yka8WZYOaXLbc4+fe0ueH9aZGLRDVXAdIikUhN5qZ5lPme3Mp9hb4hSu5E3AdOWg4Ror169SYIiZ2FPBP0QYUBJChBzhuKFIEKoApuW7/ayOsHWoAxF1BpRGmMIIjaHSTzsatyzdHeJAVRqIxOSKm02mB9KcxSG085GWQP+KROVGTpMLwgsYc2upictVnkeX2c3/83DE7ilMArm+ykbdHLoZz8wogs8szMgZbOHMGZkYrYmshYxQsqg0bOspIRLuV1n5RbblgiPXLBzKEjKrxiLtNCr8zWPb/SnGn6Zct9Jlma9pbYIUgEpoJxMDTHQ2KgAHHLtt97Za09chxmv0kox+OCpMiUOqYOrWlA+ckSAu0hbYDJtgXMtpRtsRIG2ZIFWujPtrOcSDFFsZsIKExOHxJo4EYkngYIFLKimem7miwoHCSBxIcf/zYMTxJlO6ub7SRr3AQaOKOrX+w/XIzraG8dlwe+M0+atfPuX09SfMukesb4R/OqmZlC9/vSQ6X1CwfVO5ptCPMubCO5Bjz30cpJhfEr0UZXXf/a2yveso9DmclUyPN1MVKfbkqyw2+XZoGZliRGsEQuCirC6yoqPMMr5fRrRJiQQhFG6YmPUgcjlIni+kVQUZUpCnA6kZuEMaCf/zcMTmJiwOvl7KRpVguk4YOM6OhEHCWuXkJdSPuNEnRq3eWz0Vcs5DJvN7z8YjO67IZ3aqcVfTw3kR9tycbMy+E+Z5msprcx+Hz3/lJOj1uV5QJ5bYJOLVEHU2u/u1t6/4aN+VKWML0qAIssrMcuhxy+lBH9hFcsPnTL1l0mVXLobUbmmpPQ8DhZVoJSxlwNydz7Du1l2NR32EUyShqTRb1dP1AyKvaou0GWspkMiUK7rzeKKf//NgxPYmE769vspGnWUt0I8Osz9VMXVW7pHU0/U6pzdPKy03cIlTfvfbxn3XNPPHUldjI+Zm4MprGHR3Fx//T4pCGSpgoJ0KDsl2h0MYWEExxpFLKgGnNbt9tbe85AcdTkSXIrRTh1VJEyYyRAC4duIY9FwHXzxu6hUpdLLyyHnjhLkcnTDa5aS18ES8FLJmTJr58mmx3XdbjR4+//NwxOwpDA69vsMQdQ4hB46Rg1chIGh/TqQZOaKtULTnkac8I6WXSDSO1HTKWSPYquVjRqmvpRkqs2o3hYlbnSniHHN8DPieYJG3MQRDRqc89dMqu0QrVUCD91cjzJRUo+TZijgFaKD8YKHq6n10VJArIypNKuoAhOyX6WySq/LVGnqy5lCMEuHrHcW2lzmj9Tw5jk9l6AcqXsmnrFeli8sjeFr7trP+0u7dm1Ocq6wfePZWq/P/83DE8CwUFrm+yxB8LC3BIkSxkyjq0KBMeNCSgZvz7nS6396kQq+u1Z20jE0BcbL//6Pu8OZuxQzWoMKtyI848PJ6VqV4SbaQ6/eHmt60zOwyLOZwv3L+xyLScyq5WdaxBIvGUrEUcuUyFQU5LvrrY6puqA2kIv6zEoEO+Bk+JIHh20pDGULy8QUolRG6xk/Woy3lmnI76oy3+sMVihqqarQOaxtILOdRYdiANCrsg9ROrDEQdP/zcMToJxwKtb7IzX0Posuq53s4fMtOjjYLF87pomjxg0RJS0uUaL6k0vOU4yJe0uBftPvmYhO3hWrElyiV19W8yrTcNeZS0Oqpt0lOP+5+K+f2+vqb5fmdWYa7wNWaY5dFnVjTrQHKqgCE5bv9rK61OjMXlXiBaQEXLMQgqEwHEC/9NKN1IWuaJTY82ZRqExlcd2sQWzVl2ZniNJZU0mM1jU5NIIoXYYyU4oiBro52q1JLFkKC//NwxPQpi/61HtMQmSUbda4PINECtlAYiVKzs4R6UA2iRFiVa5kcBD5l60jr9vPhGXMtpp/XW8GgRJoXx/tzNVNoxZ/Ieex845zSJMLO5kgawS3THrVwQ7oZIHB0hmNqACbmt/+ttq60+zS6dgv6tyCVlwgkJTjljdtV2D1MNz1uJxcpVOLIYfxFy2NXuKX1mnhdZjhmkNKZe9nrnsdM6/wPtM3iTZRTZA5VYAGFBA/qaYC9UaL/82DE9ifT/rm+yka9OjCOoDTRCat4kq8c7FRISkRGoU87I/JCLT6ZKpFaZxr3Yy9T2d+7l6fQWTMa62fdFHlYXSVG7fOCdVMqMrYUH742ypCWAGbue//2uzO0wATvDKQq3IkgMnSQVFqWs9oomoTmKwLT5LDQ6q+lOIV0LF13xLtTfj7Syl4j8gHfM+wtnrOtt02CkkgSJ1O54FX/83DE5Saz3r2+ywadFW9zuc06lvWNn+kadnfQPTy8605ZU5zNz4X5mvfN253nbKdxqvvuP6u8yUM31NJ/L3Mr5mu1v6bMa9eX/e0MydacXed6/fH2ezV8262D2KmqnVbyZTWvNtDXOLIMQ0FHnd9bJKx4RADGWkNEl1EJ8xoG6k+PFoDUGuzarzglC8ydETFEQseXURnE8aUhFCRIegucVZAghYnPuEImrKKJZiB6h0SSQSJhYf/zcMTzKgQCvb7LDJnZsIYh9vRDqgwuIOEkmlDj2HSncRR9rMyRuRF8Df4dbYa0s1t01/fUfVNcusaQOmpbt7l/bN254yKmY6rlu+K1rHLFRQ+lpjD71o1H5r7e6p04HGiZauULax66RJmNqgAnNXPtrbKzZE8AxVZEn3VlKTlGvhGKunhjDINkgGUYBCcWRuEYoC4DkSyicItv6FE5aFTPbDee++cWVowQOdMDRUCjabbdGeCY//NwxPQqZBa1HtJQkNBJsjm5mMRio9KORB3tyI0U42nDerldEhlIZHZGabMoIxib1JmDQzfU4rj96jkTE5ggdgtc6Wf8Y/8iykpGalFZr6azRS20CGDRGfIenQSPprRqAAFSsc/1tkqsTDDD1mOJatmXQAkMaGDitUeZXWboj8tyHCYbSQki9LpAGISi6xPX8siTRWXWNq1Fo3OrbipO0kbU0cVU1LGUDc7cyQLKK5k/ThTCC0H/82DE8yckFrm+0kaYGLUIUDA/za1q5e6xjUwzqKVmM7kbvlg9yMZV5TZl5VUZS6fnTQ2eGREXo52ltytafNDaviNT2jZqdLMWZXyLWBcwlBDKRbgmYSFCm9YSQ7DVKgQBErZPvbJKzcuMZCamYIw7e0gsSgYlSPJg5VqNNIpXYMDcUQloo0ZHT5xuJrsTQVQI0rSogIrhYevdUT3/83DE5SnUBrZe0ka9Vohl1oU1DciaSNpVCFVb8ivxJUYDEvKMFyEJmFPW3SGFpE3DlEFFlC9KJRGeuXe7nIuabnCWW3pIxVuyZZ+HMu3IjLsuus5kZGpa3XiHT1dlhSZFGUV+iJtFFNIoQ5Go5QBmpJN/vZKoH5z+OghzoIgkjLiqoTG0ifNSSt5G4eg6eno1P5aqbis1M1M6k14XgNOo1aVIqLlNi3pFRIrMjdg1CiMHmtlH9P/zcMTmJ3wWtl7SRryOT18V1E+YAHZmWL3jNN1pj9grq1DVBZQLqIE7uIJthTmS5LSpaM8HFna0nrV9j/JzP+lMpcy//XT6tjfl5d7NmZ0+M/QhxUhsWvUCC1pwSbKirvt/+12z9t6IJXER3kVOEJWyoETKURH2frNmhlKBRqxwpO6jgyJgbioxT1FBosSUmI9QHxDajYHGECQditvUtQwQ5olnPpSri2IcuC5phq26HGPY37ek//NgxPEmbAa1vsmHEU9VLz33W74nSet3u7ra6Rq6Sr/+6lu6lPm5puxoxu6buu3l2pBsQ87dUl9DImrn2u+BrFwICoqw0rjuFSusyiZgbxcE0jc908OKVQW7b/9/tu67UzpqY40WmdUacli9xpSKsQxjspjkb5HKaclue91CSYxORz5T3xc6FkgXSkxwWQSscmcMrmmlNsaaQdAq//NwxOYoTA64fsvQbCbQ5GUvu6vPnpon+JvPd9r12R+TudtxLNS3CiuTK1TPvLucbXPne0466+u2Zts9brU/atT/zu292z+N+GN21sbO+5r3mwyHfu3qcesP7Wd/9reg5Hf4WdWnx5OLPVM5Vx1qAAJEuskktktsmijbhnG5gZKGPJ6avExhFiGLzsBqUHcA0sJzTpPMunszWRjGARLPGJwuYzABkESAwLgoOrUwwysxgRkg4IT/83DE7SlcFrkfWTAAQOKhyYEjE1E8zEG0AD1gkEmiQgnxSdDAb8QOXNZ8/iCIEhVBC3r6KmZynAy4wYBbix2UMlZaoQCAqpi3dM7DJM5RDdAtBnslaTAsCNopi4hdNqbCWysecB0Xfgh6bbtP27DXk534l7dGnu43Vni7XSa8p2viVM3g6UxifdFsUBSCUxaNvK6ctklO/TYJe9URZy8cThpurmQ4vZpLcXSft63YceLwLNSKDf/zsMTwWRQWib+c0ACtNzN2mrz2Vumpb0zLuzT13Z2JwuI1792Ey2lfyehx2akPQa/F7OBYzWirsvo+NqWRPGALElnYMdqVYyKCOSqNPtTyGColbk8Y+Vxeazh6il2PH23RyG1GJPLaSLRZ5aZkXaStTvxCZVSQJPM9azFIVGYEg+oAIzXfz7bf/nINRFJp6tJINQIgeXkkxMVp7WWVq1atWrVq1qAgICAgK6hQEBAQETAIBAQFVX2VVUBAVYBQXzoIKK/IFFZBQSK4FBQrwoKCXcCgr8goKf4UFf4UFBXhQUdiFBQUFPCgp/8f4KDBQ3wUKG/FBjv6CneCgoMN6CuhP///wU34oKK8FBQUVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NgxOsi6PamX8wYAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MQxO4AAANIAAAAAFVVVVVVVVVVVVVVVVU=")
+
+[node name="LightSaber" type="RigidBody3D" unique_id=1748064385 node_paths=PackedStringArray("animation_settings", "audios_manager") groups=["saber"]]
+collision_layer = 4
+collision_mask = 19
+freeze_mode = 1
+script = ExtResource("1_66enu")
+animation_settings = NodePath("AnimationSettings")
+audios_manager = NodePath("Audios")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=255817392]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.059906e-06, -0.16710562, -0.00084195286)
+shape = SubResource("CapsuleShape3D_dmmj5")
+
+[node name="LigthSaberEdited" parent="." unique_id=1554347123 instance=ExtResource("2_hshof")]
+transform = Transform3D(0.01315758, 0, 0, 0, 1.5690259e-10, 0.01315758, 0, -0.013157581, 1.5690257e-10, 0, 0, 0)
+script = ExtResource("3_y1yqq")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1678962444 groups=["lightsaber_blade"]]
+collision_layer = 4
+collision_mask = 15
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D" unique_id=1176832679]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.316, 0)
+mesh = SubResource("CylinderMesh_5g0v5")
+skeleton = NodePath("../../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=200051817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50373936, 0)
+shape = SubResource("CapsuleShape3D_ondbr")
+debug_color = Color(0.9237826, 4.4761597e-05, 0.67844754, 0.41960785)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1650512089]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_o8w86")
+autoplay = &"Turned_Off"
+
+[node name="AnimationSettings" type="Node" parent="." unique_id=1373292880 node_paths=PackedStringArray("animation_player")]
+script = ExtResource("7_h6o03")
+animation_player = NodePath("../AnimationPlayer")
+
+[node name="Audios" type="Node" parent="." unique_id=662514519]
+script = ExtResource("8_5w0cf")
+
+[node name="Stable" type="AudioStreamPlayer" parent="Audios" unique_id=1323467009]
+stream = SubResource("AudioStreamMP3_77l78")
+parameters/looping = true
+
+[node name="Clash" type="AudioStreamPlayer" parent="Audios" unique_id=570075812]
+
+[node name="TurnOff" type="AudioStreamPlayer" parent="Audios" unique_id=1086795273]
+
+[node name="TurnOn" type="AudioStreamPlayer" parent="Audios" unique_id=1347338047]
+
+[node name="Swing" type="AudioStreamPlayer" parent="Audios" unique_id=810905001]
+stream = ExtResource("9_ocwbx")
+volume_db = 15.0
+bus = &"SFX"
+parameters/looping = true
+
+[node name="BlasterBlock" type="AudioStreamPlayer" parent="Audios" unique_id=1464364500]
+stream = ExtResource("10_foc2u")
+
+[node name="GrabPointHandLeft" parent="." unique_id=784240625 instance=ExtResource("15_t1jmm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011996508, -0.18420453, -0.10496259)
+visible = true
+
+[node name="GrabPointHandRight" parent="." unique_id=363366197 instance=ExtResource("16_1dxh3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.010583773, -0.18446028, -0.10130197)
+visible = true
+
+[node name="GrabPointSnap" parent="." unique_id=818749084 instance=ExtResource("13_kku0w")]
+
+[connection signal="animation_finished" from="AnimationPlayer" to="AnimationSettings" method="_on_animation_player_animation_finished"]

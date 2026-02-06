@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bfxlciekdxdhf"]
+
+[ext_resource type="Script" uid="uid://cs2vlekc3d0ip" path="res://Scripts/Lightsaber/lightsaber.gd" id="1_pon3f"]
+[ext_resource type="PackedScene" uid="uid://ulfn5mq72vwi" path="res://Scenes/LightSaber/LightSaber.tscn" id="2_5g0v5"]
+
+[node name="Lightsaber" type="Node3D" unique_id=931836919]
+script = ExtResource("1_pon3f")
+
+[node name="PickableObject" parent="." unique_id=1748064385 instance=ExtResource("2_5g0v5")]
+
+[connection signal="action_pressed" from="PickableObject" to="." method="_on_pickable_object_action_pressed"]
+[connection signal="dropped" from="PickableObject" to="." method="_on_pickable_object_dropped"]
+[connection signal="picked_up" from="PickableObject" to="." method="_on_pickable_object_picked_up"]

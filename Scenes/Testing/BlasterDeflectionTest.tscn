@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://bfky7gqee6aj3"]
+
+[ext_resource type="Texture2D" uid="uid://u5g0w2q7kxf" path="res://Texture/WhiteBoxPrototype.png" id="1_1f2mo"]
+[ext_resource type="PackedScene" uid="uid://bkkm3wkyjng47" path="res://Scenes/BlasterTurret.tscn" id="2_nvwve"]
+[ext_resource type="PackedScene" uid="uid://c3sijepp8sel8" path="res://Scenes/Player.tscn" id="3_nvwve"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f2xod"]
+sky_top_color = Color(0.07057259, 0.3746437, 1, 1)
+sky_horizon_color = Color(0.51186466, 0.558643, 0.7111786, 1)
+ground_bottom_color = Color(0.25473794, 0.13778043, 0.12256651, 1)
+ground_horizon_color = Color(0.51186466, 0.558643, 0.7111786, 1)
+
+[sub_resource type="Sky" id="Sky_q4huo"]
+sky_material = SubResource("ProceduralSkyMaterial_f2xod")
+
+[sub_resource type="Environment" id="Environment_sy1ph"]
+background_mode = 2
+sky = SubResource("Sky_q4huo")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ilo3a"]
+albedo_color = Color(0.9137255, 0.98039216, 1, 1)
+albedo_texture = ExtResource("1_1f2mo")
+
+[sub_resource type="BoxMesh" id="BoxMesh_2d0qa"]
+material = SubResource("StandardMaterial3D_ilo3a")
+size = Vector3(15, 1, 15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0ispx"]
+size = Vector3(15, 1, 15)
+
+[node name="BlasterDeflectionTest" type="Node3D" unique_id=1407243401]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=409878180]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1865861806]
+environment = SubResource("Environment_sy1ph")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1786023237]
+mesh = SubResource("BoxMesh_2d0qa")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=1534808930]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1132166855]
+shape = SubResource("BoxShape3D_0ispx")
+
+[node name="BlasterTurret" parent="." unique_id=725125303 instance=ExtResource("2_nvwve")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, 0)
+
+[node name="Player" parent="." unique_id=916039665 instance=ExtResource("3_nvwve")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4717951, 0.8144737, 5.106024)
+current = true

@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://c3sijepp8sel8"]
+
+[ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="1_kyqiw"]
+[ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="1_rpqav"]
+[ext_resource type="PackedScene" uid="uid://njx823gyk04n" path="res://addons/godot-xr-tools/hands/scenes/highpoly/left_hand.tscn" id="3_52ee3"]
+[ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="3_nn08x"]
+[ext_resource type="PackedScene" uid="uid://b6bk2pj8vbj28" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="4_5ixxa"]
+[ext_resource type="PackedScene" uid="uid://raeeicvvindd" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_hand.tscn" id="5_bhhdu"]
+[ext_resource type="PackedScene" uid="uid://rt5ooq53iec6" path="res://Scenes/LightSaber/LightSaberSnapZone.tscn" id="7_52ee3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kyqiw"]
+height = 2.3850098
+
+[node name="Player" type="XROrigin3D" unique_id=916039665]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="." unique_id=1873391136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7713692, 0)
+current = true
+
+[node name="LeftHand" type="XRController3D" parent="." unique_id=1160845697]
+tracker = &"left_hand"
+
+[node name="FunctionPickup" parent="LeftHand" unique_id=579649453 instance=ExtResource("1_kyqiw")]
+
+[node name="MovementDirect" parent="LeftHand" unique_id=737666595 instance=ExtResource("3_nn08x")]
+
+[node name="LeftHand" parent="LeftHand" unique_id=1494601185 instance=ExtResource("3_52ee3")]
+
+[node name="RightHand" type="XRController3D" parent="." unique_id=978039126]
+tracker = &"right_hand"
+
+[node name="FunctionPickup" parent="RightHand" unique_id=1681611673 instance=ExtResource("1_kyqiw")]
+
+[node name="MovementTurn" parent="RightHand" unique_id=538639114 instance=ExtResource("4_5ixxa")]
+
+[node name="RightHand" parent="RightHand" unique_id=461344328 instance=ExtResource("5_bhhdu")]
+
+[node name="PlayerBody" parent="." unique_id=386933647 instance=ExtResource("1_rpqav")]
+collision_layer = 1
+collision_mask = 15
+platform_floor_layers = 4294967041
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBody" unique_id=1030753275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1175537, 0)
+shape = SubResource("CapsuleShape3D_kyqiw")
+
+[node name="LightSaberSnapZone" parent="PlayerBody" unique_id=1030100871 instance=ExtResource("7_52ee3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29896194, 1.00359, -0.18439716)
+collision_layer = 16
+collision_mask = 4
+
+[node name="LightSaberSnapZone2" parent="PlayerBody" unique_id=1397785363 instance=ExtResource("7_52ee3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.30402878, 0.99822795, -0.17382097)
+collision_layer = 16
+collision_mask = 4
