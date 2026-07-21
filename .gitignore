@@ -1,4 +1,8 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-/addons/
+
+# Exported builds
+*.apk
+*.aab
+export_presets.cfg.bak
