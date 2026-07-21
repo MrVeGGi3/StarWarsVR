@@ -6,6 +6,9 @@ signal focus_gained
 signal pose_recentered
 
 @export var maximum_refresh_rate : int = 90
+## When OpenXR is unavailable, quit instead of falling back to flat mode.
+## Kept off so the project can still be run and iterated on a desktop.
+@export var quit_if_no_xr : bool = false
 
 var xr_interface: XRInterface
 var xr_is_focussed = false
@@ -37,10 +40,13 @@ func _ready():
 		xr_interface.session_stopping.connect(_on_openxr_stopping)
 		xr_interface.pose_recentered.connect(_on_openxr_pose_recentered)
 	else:
-		# We couldn't start OpenXR.
-		print("OpenXR not instantiated!")
-		get_tree().quit()
-		
+		# We couldn't start OpenXR. Fall back to flat mode so the scene stays
+		# runnable on a desktop without a headset.
+		push_warning("OpenXR not instantiated, running in flat mode.")
+		if quit_if_no_xr:
+			get_tree().quit()
+
+
 
 # Handle OpenXR session ready
 func _on_openxr_session_begun() -> void:
@@ -70,8 +76,11 @@ func _on_openxr_session_begun() -> void:
 		xr_interface.set_display_refresh_rate(new_rate)
 		current_refresh_rate = new_rate
 
-	# Now match our physics rate
-	Engine.physics_ticks_per_second = current_refresh_rate
+	# Now match our physics rate. Guard against 0, which the runtime reports
+	# when it does not support the refresh rate extension - assigning it would
+	# stall the physics simulation entirely.
+	if current_refresh_rate > 0:
+		Engine.physics_ticks_per_second = int(current_refresh_rate)
 
 func _on_openxr_visible_state() -> void:
 	if xr_is_focussed:
@@ -80,7 +89,7 @@ func _on_openxr_visible_state() -> void:
 		xr_is_focussed = false
 		get_tree().paused = true
 
-		emit_signal("focus_lost")
+		focus_lost.emit()
 		
 func _on_openxr_focused_state() -> void:
 	print("OpenXR gained focus")
@@ -88,11 +97,11 @@ func _on_openxr_focused_state() -> void:
 
 	get_tree().paused = false
 
-	emit_signal("focus_gained")
+	focus_gained.emit()
 	
 func _on_openxr_stopping() -> void:
 	# Our session is being stopped.
 	print("OpenXR is stopping")
 
 func _on_openxr_pose_recentered() -> void:
-	emit_signal("pose_recentered")
+	pose_recentered.emit()

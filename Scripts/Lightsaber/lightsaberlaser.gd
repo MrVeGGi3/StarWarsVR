@@ -1,84 +1,164 @@
+# XRToolsPickable is a @tool script, and the addon's grab-point previews walk
+# up the ancestors calling is_xr_class() from the editor. Dropping @tool here
+# would turn this node into a placeholder instance and break those previews,
+# so the runtime-only logic below is guarded with Engine.is_editor_hint().
 @tool
 class_name LightSaberSettings
 extends XRToolsPickable
-
-@export var animation_settings : AnimationSettings 
-@export var audios_manager : LightSaberAudioManager
-
-
-var velocity := Vector3.ZERO
-var last_position := Vector3.ZERO
-
-
-func _physics_process(delta: float) -> void:
-	velocity = (global_position - last_position) / delta
-	last_position = global_position
-
-func get_saber_velocity() -> Vector3:
-	return velocity
 
 enum lightsaber_states {
 	ON,
 	OFF
 }
 
-var current_lightsaber_state = lightsaber_states.OFF
-var is_picked = false
+## Controller action that toggles the blade.
+const TOGGLE_BUTTON := "by_button"
+## Below this speed the saber counts as settled and can be recalled.
+const RECALL_REST_SPEED := 0.5
+## Cap on settle retries, so a saber that never comes to rest still returns.
+const RECALL_MAX_RETRIES := 5
+
+@export var animation_settings : AnimationSettings
+@export var audios_manager : LightSaberAudioManager
+
+@export_group("Recall")
+## Seconds after being dropped before the saber flies back to its holster.
+## Set to 0 to disable the recall entirely.
+@export var recall_delay : float = 1.5
+
+var current_lightsaber_state := lightsaber_states.OFF
 var actual_controller : XRController3D = null
 
-func _ready():
+## Last snap zone that held the saber; learnt on pickup, so no cross-scene
+## wiring is needed as long as the saber starts holstered.
+var home_zone : XRToolsSnapZone = null
+
+var velocity := Vector3.ZERO
+var last_position := Vector3.ZERO
+
+var _recall_timer : Timer
+var _recall_retries := 0
+
+
+func _ready() -> void:
+	# XRToolsPickable._ready() collects the child grab points. Skipping it
+	# leaves that list empty, so the saber gets grabbed by the RigidBody origin
+	# instead of the hilt and the snap zone behaves inconsistently.
+	super._ready()
+
+	if Engine.is_editor_hint():
+		return
+
+	# Seed the position tracker, otherwise the first frame reports a huge
+	# velocity measured all the way from the world origin.
+	last_position = global_position
+
 	picked_up.connect(_on_picked_up)
 	dropped.connect(_on_dropped)
-	
 
-func _on_picked_up(_pickable):
+	_recall_timer = Timer.new()
+	_recall_timer.one_shot = true
+	_recall_timer.timeout.connect(_recall_to_holster)
+	add_child(_recall_timer)
+
+
+func _physics_process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+
+	velocity = (global_position - last_position) / delta
+	last_position = global_position
+
+
+func get_saber_velocity() -> Vector3:
+	return velocity
+
+
+func _on_picked_up(_pickable) -> void:
+	_recall_timer.stop()
+
+	# Remember the holster we came from, so being left on the floor can send
+	# the saber back to it.
+	var zone := get_picked_up_by() as XRToolsSnapZone
+	if zone:
+		home_zone = zone
+
 	actual_controller = get_picked_up_by_controller()
-	
+
 	if actual_controller:
 		actual_controller.button_pressed.connect(_on_controller_button_pressed)
 
-func _on_dropped(_pickable):
-	if actual_controller:
-		if actual_controller.button_pressed.is_connected(_on_controller_button_pressed):
-			actual_controller.button_pressed.disconnect(_on_controller_button_pressed)
-	
+
+func _on_dropped(_pickable) -> void:
+	if actual_controller and actual_controller.button_pressed.is_connected(_on_controller_button_pressed):
+		actual_controller.button_pressed.disconnect(_on_controller_button_pressed)
+
 	actual_controller = null
 	toggle_lightsaber(false)
-	
 
-func _on_controller_button_pressed(button_name : String):
-	print(button_name)
-	if button_name == "by_button":
-		print("Estou pressionando o botão para acionar o sabre de luz")
+	# A hand taking the saber out of the holster also fires this, but it picks
+	# the saber up in the same frame, which stops the timer again.
+	if recall_delay > 0.0 and is_instance_valid(home_zone):
+		_recall_retries = 0
+		_recall_timer.start(recall_delay)
+
+
+## Returns the saber to its holster once it has been left lying around.
+func _recall_to_holster() -> void:
+	if is_picked_up() or not is_instance_valid(home_zone):
+		return
+
+	# Do not fight the player if something else filled the holster meanwhile.
+	if is_instance_valid(home_zone.picked_up_object):
+		return
+
+	# Still tumbling or mid-fall: give it another moment to settle.
+	if linear_velocity.length() > RECALL_REST_SPEED and _recall_retries < RECALL_MAX_RETRIES:
+		_recall_retries += 1
+		_recall_timer.start(recall_delay)
+		return
+
+	home_zone.pick_up_object(self)
+
+
+func _on_controller_button_pressed(button_name : String) -> void:
+	if button_name == TOGGLE_BUTTON:
 		toggle_lightsaber()
-		
 
-func toggle_lightsaber(force_state = null):
-	var new_state
-	
+
+func toggle_lightsaber(force_state = null) -> void:
+	var new_state : int
+
 	if force_state != null:
 		new_state = lightsaber_states.ON if force_state else lightsaber_states.OFF
 	else:
 		new_state = lightsaber_states.ON if current_lightsaber_state == lightsaber_states.OFF else lightsaber_states.OFF
-	
+
 	current_lightsaber_state = new_state
-	
+
 	if new_state == lightsaber_states.ON:
 		animation_settings.turn_lightsaber_on()
 		trigger_haptic_ignition()
-		print("Estou ligando o Lightsaber")
 	else:
 		animation_settings.turn_lightsaber_off()
 		trigger_haptic_retract()
-		print("Estou desligando o Lightsaber")
 
-func vibrate_controller():
-	actual_controller.trigger_haptic_pulse("haptic", 100.0, 1.0, 0.1, 0)
+	if audios_manager:
+		audios_manager.set_hum_active(new_state == lightsaber_states.ON)
 
-func trigger_haptic_ignition():
+
+func vibrate_controller() -> void:
+	if actual_controller:
+		actual_controller.trigger_haptic_pulse("haptic", 100.0, 1.0, 0.1, 0)
+
+
+## Ignition: high amplitude, low frequency, to sell the raw energy surge.
+func trigger_haptic_ignition() -> void:
 	if actual_controller:
 		actual_controller.trigger_haptic_pulse("haptic", 60.0, 1.0, 0.25, 0)
 
-func trigger_haptic_retract():
+
+## Retraction: short and higher frequency, for the mechanical power-down feel.
+func trigger_haptic_retract() -> void:
 	if actual_controller:
-		actual_controller.trigger_haptic_pulse("haptic", 80.0, 0.6, 0.15,0)
+		actual_controller.trigger_haptic_pulse("haptic", 80.0, 0.6, 0.15, 0)

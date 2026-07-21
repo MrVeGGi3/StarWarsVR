@@ -21,6 +21,7 @@ current = true
 tracker = &"left_hand"
 
 [node name="FunctionPickup" parent="LeftHand" unique_id=579649453 instance=ExtResource("1_kyqiw")]
+grab_collision_mask = 327700
 
 [node name="MovementDirect" parent="LeftHand" unique_id=737666595 instance=ExtResource("3_nn08x")]
 
@@ -30,6 +31,7 @@ tracker = &"left_hand"
 tracker = &"right_hand"
 
 [node name="FunctionPickup" parent="RightHand" unique_id=1681611673 instance=ExtResource("1_kyqiw")]
+grab_collision_mask = 327700
 
 [node name="MovementTurn" parent="RightHand" unique_id=538639114 instance=ExtResource("4_5ixxa")]
 
@@ -47,9 +49,9 @@ shape = SubResource("CapsuleShape3D_kyqiw")
 [node name="LightSaberSnapZone" parent="PlayerBody" unique_id=1030100871 instance=ExtResource("7_52ee3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29896194, 1.00359, -0.18439716)
 collision_layer = 16
-collision_mask = 4
+collision_mask = 65540
 
 [node name="LightSaberSnapZone2" parent="PlayerBody" unique_id=1397785363 instance=ExtResource("7_52ee3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.30402878, 0.99822795, -0.17382097)
 collision_layer = 16
-collision_mask = 4
+collision_mask = 65540

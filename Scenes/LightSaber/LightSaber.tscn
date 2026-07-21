@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://d0h43gdhyg4lk" path="res://Scripts/Lightsaber/lightsaberlaser.gd" id="1_66enu"]
 [ext_resource type="PackedScene" uid="uid://buh2so4lefi70" path="res://3D Models/LightSaber/ligth_saber_edited.tscn" id="2_hshof"]
-[ext_resource type="Script" uid="uid://cs2vlekc3d0ip" path="res://Scripts/Lightsaber/lightsaber.gd" id="3_y1yqq"]
 [ext_resource type="Shader" uid="uid://dbmddc164xiw7" path="res://Shaders/blaster.gdshader" id="4_mn0lu"]
 [ext_resource type="AudioStream" uid="uid://114nmjtyogxv" path="res://Audios/LightSaber/TurnOff.mp3" id="5_1urit"]
 [ext_resource type="AudioStream" uid="uid://bl7rnl5pslaim" path="res://Audios/LightSaber/TurnOn.mp3" id="6_ihqhx"]
@@ -17,6 +16,12 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dmmj5"]
 radius = 0.033691406
 height = 0.3583374
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_saber"]
+friction = 1.0
+rough = true
+bounce = 0.0
+absorbent = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1ffi7"]
 render_priority = 0
@@ -41,7 +46,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/path = NodePath("Area3D:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -53,7 +58,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/path = NodePath("Area3D/CollisionShape3D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -65,7 +70,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/path = NodePath("Area3D/MeshInstance3D:mesh")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -77,7 +82,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/path = NodePath("Area3D/MeshInstance3D:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -89,7 +94,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/path = NodePath("Area3D:monitorable")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -101,7 +106,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/path = NodePath("Area3D/MeshInstance3D:mesh:height")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -113,7 +118,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/path = NodePath("Area3D/MeshInstance3D:visible")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -130,7 +135,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/path = NodePath("Area3D:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -142,7 +147,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/path = NodePath("Area3D/CollisionShape3D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -154,7 +159,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/path = NodePath("Area3D/MeshInstance3D:mesh")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -166,7 +171,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/path = NodePath("Area3D/MeshInstance3D:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -178,7 +183,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/path = NodePath("Area3D:monitorable")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -190,7 +195,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/path = NodePath("Area3D/MeshInstance3D:mesh:height")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -202,7 +207,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/path = NodePath("Area3D/MeshInstance3D:visible")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -219,7 +224,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/path = NodePath("Area3D:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -231,7 +236,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/path = NodePath("Area3D/CollisionShape3D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -243,7 +248,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/path = NodePath("Area3D/MeshInstance3D:mesh")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -255,7 +260,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/path = NodePath("Area3D/MeshInstance3D:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -267,7 +272,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/path = NodePath("Area3D:monitorable")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -279,7 +284,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/path = NodePath("Area3D/MeshInstance3D:mesh:height")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -291,7 +296,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/path = NodePath("Area3D/MeshInstance3D:visible")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -307,7 +312,7 @@ length = 1.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/path = NodePath("Area3D:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -319,7 +324,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/1/path = NodePath("Area3D/CollisionShape3D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -331,7 +336,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/2/path = NodePath("Area3D/MeshInstance3D:mesh")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -343,7 +348,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/3/path = NodePath("Area3D/MeshInstance3D:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -355,7 +360,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/4/path = NodePath("Area3D:monitorable")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -367,7 +372,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/5/path = NodePath("Area3D/MeshInstance3D:mesh:height")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -379,7 +384,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/6/path = NodePath("Area3D/MeshInstance3D:visible")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -391,7 +396,7 @@ tracks/6/keys = {
 tracks/7/type = "audio"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("LightSaber/Audios/TurnOff")
+tracks/7/path = NodePath("Audios/TurnOff")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -409,7 +414,7 @@ resource_name = "turn_on"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("LightSaber/Area3D:monitoring")
+tracks/0/path = NodePath("Area3D:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -421,7 +426,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("LightSaber/Area3D:monitorable")
+tracks/1/path = NodePath("Area3D:monitorable")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -433,7 +438,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("LightSaber/Area3D/MeshInstance3D:visible")
+tracks/2/path = NodePath("Area3D/MeshInstance3D:visible")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -445,7 +450,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh")
+tracks/3/path = NodePath("Area3D/MeshInstance3D:mesh")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -457,7 +462,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("LightSaber/Area3D/CollisionShape3D:disabled")
+tracks/4/path = NodePath("Area3D/CollisionShape3D:disabled")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -469,7 +474,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("LightSaber/Area3D/MeshInstance3D:position")
+tracks/5/path = NodePath("Area3D/MeshInstance3D:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -481,7 +486,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("LightSaber/Area3D/MeshInstance3D:mesh:height")
+tracks/6/path = NodePath("Area3D/MeshInstance3D:mesh:height")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -493,7 +498,7 @@ tracks/6/keys = {
 tracks/7/type = "audio"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("LightSaber/Audios/TurnOn")
+tracks/7/path = NodePath("Audios/TurnOn")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -521,7 +526,9 @@ data = PackedByteArray("//OAxAAAAAAAAAAAAFhpbmcAAAAPAAAAHQAAFg0AERERHx8fKSkpKTIy
 [node name="LightSaber" type="RigidBody3D" unique_id=1748064385 node_paths=PackedStringArray("animation_settings", "audios_manager") groups=["saber"]]
 collision_layer = 4
 collision_mask = 19
+physics_material_override = SubResource("PhysicsMaterial_saber")
 freeze_mode = 1
+angular_damp = 6.0
 script = ExtResource("1_66enu")
 animation_settings = NodePath("AnimationSettings")
 audios_manager = NodePath("Audios")
@@ -532,7 +539,6 @@ shape = SubResource("CapsuleShape3D_dmmj5")
 
 [node name="LigthSaberEdited" parent="." unique_id=1554347123 instance=ExtResource("2_hshof")]
 transform = Transform3D(0.01315758, 0, 0, 0, 1.5690259e-10, 0.01315758, 0, -0.013157581, 1.5690257e-10, 0, 0, 0)
-script = ExtResource("3_y1yqq")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1678962444 groups=["lightsaber_blade"]]
 collision_layer = 4
@@ -549,7 +555,7 @@ shape = SubResource("CapsuleShape3D_ondbr")
 debug_color = Color(0.9237826, 4.4761597e-05, 0.67844754, 0.41960785)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1650512089]
-root_node = NodePath("../..")
+root_node = NodePath("..")
 libraries/ = SubResource("AnimationLibrary_o8w86")
 autoplay = &"Turned_Off"
 
@@ -557,27 +563,31 @@ autoplay = &"Turned_Off"
 script = ExtResource("7_h6o03")
 animation_player = NodePath("../AnimationPlayer")
 
-[node name="Audios" type="Node" parent="." unique_id=662514519]
+[node name="Audios" type="Node3D" parent="." unique_id=662514519]
 script = ExtResource("8_5w0cf")
 
-[node name="Stable" type="AudioStreamPlayer" parent="Audios" unique_id=1323467009]
+[node name="Stable" type="AudioStreamPlayer3D" parent="Audios" unique_id=1323467009]
 stream = SubResource("AudioStreamMP3_77l78")
-parameters/looping = true
-
-[node name="Clash" type="AudioStreamPlayer" parent="Audios" unique_id=570075812]
-
-[node name="TurnOff" type="AudioStreamPlayer" parent="Audios" unique_id=1086795273]
-
-[node name="TurnOn" type="AudioStreamPlayer" parent="Audios" unique_id=1347338047]
-
-[node name="Swing" type="AudioStreamPlayer" parent="Audios" unique_id=810905001]
-stream = ExtResource("9_ocwbx")
-volume_db = 15.0
 bus = &"SFX"
 parameters/looping = true
 
-[node name="BlasterBlock" type="AudioStreamPlayer" parent="Audios" unique_id=1464364500]
+[node name="Clash" type="AudioStreamPlayer3D" parent="Audios" unique_id=570075812]
+bus = &"SFX"
+
+[node name="TurnOff" type="AudioStreamPlayer3D" parent="Audios" unique_id=1086795273]
+bus = &"SFX"
+
+[node name="TurnOn" type="AudioStreamPlayer3D" parent="Audios" unique_id=1347338047]
+bus = &"SFX"
+
+[node name="Swing" type="AudioStreamPlayer3D" parent="Audios" unique_id=810905001]
+stream = ExtResource("9_ocwbx")
+bus = &"SFX"
+parameters/looping = true
+
+[node name="BlasterBlock" type="AudioStreamPlayer3D" parent="Audios" unique_id=1464364500]
 stream = ExtResource("10_foc2u")
+bus = &"SFX"
 
 [node name="GrabPointHandLeft" parent="." unique_id=784240625 instance=ExtResource("15_t1jmm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011996508, -0.18420453, -0.10496259)

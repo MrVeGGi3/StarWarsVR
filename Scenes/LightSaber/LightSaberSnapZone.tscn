@@ -17,7 +17,7 @@ height = 0.4
 
 [node name="LightSaberSnapZone" type="Area3D" unique_id=1030100871]
 collision_layer = 16
-collision_mask = 4
+collision_mask = 65540
 script = ExtResource("1_scrqr")
 grab_distance = 0.2
 snap_require = "saber"

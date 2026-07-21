@@ -79,3 +79,6 @@ script = ExtResource("3_sgiyq")
 
 [node name="LightSaber" parent="." unique_id=1748064385 instance=ExtResource("4_twhho")]
 transform = Transform3D(0.0176444, 0.9998443, 0, -0.9998443, 0.0176444, 0, 0, 0, 1, 0, 1.8537807, -0.2121517)
+
+[node name="LightSaberSnapZone" parent="Player/PlayerBody"]
+initial_object = NodePath("../../../LightSaber")
