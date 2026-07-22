@@ -1,10 +1,76 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjo86cqusnqc1"]
+[gd_scene load_steps=9 format=3 uid="uid://bjo86cqusnqc1"]
 
 [ext_resource type="PackedScene" uid="uid://do0g2aenm34mt" path="res://3D Models/JediTrainingDroid/jedi_training_droid.glb" id="1_a3doe"]
+[ext_resource type="Script" path="res://Scripts/Droid/training_droid.gd" id="2_droid"]
+[ext_resource type="PackedScene" uid="uid://cqem2kgi0lqc2" path="res://Scenes/Blaster.tscn" id="3_blast"]
+[ext_resource type="Script" path="res://Scripts/Droid/droid_audios_manager.gd" id="4_audio"]
+[ext_resource type="AudioStream" uid="uid://c6etb2tyd0k0c" path="res://Audios/SFX/BattleDroid/training_droid_mov_sfx.wav" id="5_hover"]
+[ext_resource type="AudioStream" uid="uid://drf17l70wuv3j" path="res://Audios/SFX/BattleDroid/battle_droid_laser_sfx.wav" id="6_laser"]
 
-[node name="JediTrainingDroidComplete" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_warn"]
+resource_local_to_scene = true
+albedo_color = Color(0.6, 0.03, 0.03, 1)
+emission_enabled = true
+emission = Color(1, 0.09, 0.05, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_warn"]
+material = SubResource("StandardMaterial3D_warn")
+radius = 0.018
+height = 0.036
+radial_segments = 12
+rings = 6
+
+[node name="JediTrainingDroidComplete" type="Node3D" node_paths=PackedStringArray("muzzle", "ports_root", "warning_light", "audios_manager") groups=["enemies"]]
+script = ExtResource("2_droid")
+blaster_scene = ExtResource("3_blast")
+fire_interval = 0.0
+bolt_color = Color(1, 0.85, 0.1, 1)
+muzzle = NodePath("Muzzle")
+ports_root = NodePath("Raycasts")
+warning_light = NodePath("Muzzle/WarningLight")
+audios_manager = NodePath("Audios")
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("1_a3doe")]
+
+[node name="Muzzle" type="Marker3D" parent="."]
+
+[node name="WarningLight" type="MeshInstance3D" parent="Muzzle"]
+material_override = SubResource("StandardMaterial3D_warn")
+mesh = SubResource("SphereMesh_warn")
+
+[node name="Charge" type="AudioStreamPlayer3D" parent="Muzzle"]
+unit_size = 1.2
+max_distance = 25.0
+bus = &"SFX"
+doppler_tracking = 2
+
+[node name="Fire" type="AudioStreamPlayer3D" parent="Muzzle"]
+stream = ExtResource("6_laser")
+unit_size = 1.5
+max_distance = 40.0
+bus = &"SFX"
+doppler_tracking = 2
+
+[node name="Audios" type="Node3D" parent="." node_paths=PackedStringArray("hover", "servo", "charge", "fire")]
+script = ExtResource("4_audio")
+hover = NodePath("Hover")
+servo = NodePath("Servo")
+charge = NodePath("../Muzzle/Charge")
+fire = NodePath("../Muzzle/Fire")
+
+[node name="Hover" type="AudioStreamPlayer3D" parent="Audios"]
+stream = ExtResource("5_hover")
+unit_size = 1.2
+max_distance = 25.0
+bus = &"SFX"
+doppler_tracking = 2
+
+[node name="Servo" type="AudioStreamPlayer3D" parent="Audios"]
+unit_size = 1.2
+max_distance = 25.0
+bus = &"SFX"
+doppler_tracking = 2
 
 [node name="Raycasts" type="Node3D" parent="."]
 

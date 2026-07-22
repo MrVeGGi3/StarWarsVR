@@ -19,10 +19,18 @@ run/main_scene="uid://bwpae2sumtntk"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
+[audio]
+
+general/3d_panning_strength=1.0
+
 [autoload]
 
 XRToolsUserSettings="*uid://bqgb8i74tm0t"
 XRToolsRumbleManager="*uid://by853dk86g1qw"
+
+[dotnet]
+
+project/assembly_name="StarWarsVR"
 
 [editor_plugins]
 
