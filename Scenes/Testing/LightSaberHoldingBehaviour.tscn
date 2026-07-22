@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://ci16fcf1s7an2" path="res://Scripts/xr_initializer.gd" id="3_sgiyq"]
 [ext_resource type="PackedScene" uid="uid://bkkm3wkyjng47" path="res://Scenes/BlasterTurret.tscn" id="4_6r7ci"]
 [ext_resource type="PackedScene" uid="uid://ulfn5mq72vwi" path="res://Scenes/LightSaber/LightSaber.tscn" id="4_twhho"]
+[ext_resource type="PackedScene" path="res://Scenes/Testing/ForceCube.tscn" id="5_cube"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sgiyq"]
 sky_top_color = Color(0.07057259, 0.3746437, 1, 1)
@@ -67,6 +68,9 @@ collision_mask = 15
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D" unique_id=751827368]
 shape = SubResource("ConcavePolygonShape3D_7nd4m")
 
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D" unique_id=540953374]
+shape = SubResource("BoxShape3D_sgiyq")
+
 [node name="Player" parent="." unique_id=437466854 instance=ExtResource("1_x04s8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2.0628545, 0, 0.58744, 1.2694763)
 current = true
@@ -80,5 +84,19 @@ script = ExtResource("3_sgiyq")
 [node name="LightSaber" parent="." unique_id=1748064385 instance=ExtResource("4_twhho")]
 transform = Transform3D(0.0176444, 0.9998443, 0, -0.9998443, 0.0176444, 0, 0, 0, 1, 0, 1.8537807, -0.2121517)
 
-[node name="LightSaberSnapZone" parent="Player/PlayerBody"]
-initial_object = NodePath("../../../LightSaber")
+[node name="ForceCubes" type="Node3D" parent="." unique_id=997519466]
+
+[node name="ForceCube" parent="ForceCubes" unique_id=218711988 instance=ExtResource("5_cube")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.91, -0.236)
+
+[node name="ForceCube2" parent="ForceCubes" unique_id=803180850 instance=ExtResource("5_cube")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 1.91, -0.236)
+
+[node name="ForceCube3" parent="ForceCubes" unique_id=1303485235 instance=ExtResource("5_cube")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91, -0.236)
+
+[node name="ForceCube4" parent="ForceCubes" unique_id=1865405582 instance=ExtResource("5_cube")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1.91, -0.236)
+
+[node name="ForceCube5" parent="ForceCubes" unique_id=1594091110 instance=ExtResource("5_cube")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.91, -0.236)

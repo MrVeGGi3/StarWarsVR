@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b6bk2pj8vbj28" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="4_5ixxa"]
 [ext_resource type="PackedScene" uid="uid://raeeicvvindd" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_hand.tscn" id="5_bhhdu"]
 [ext_resource type="PackedScene" uid="uid://rt5ooq53iec6" path="res://Scenes/LightSaber/LightSaberSnapZone.tscn" id="7_52ee3"]
+[ext_resource type="PackedScene" path="res://Scenes/Force/ForcePower.tscn" id="8_force"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kyqiw"]
 height = 2.3850098
@@ -25,6 +26,8 @@ grab_collision_mask = 327700
 
 [node name="MovementDirect" parent="LeftHand" unique_id=737666595 instance=ExtResource("3_nn08x")]
 
+[node name="ForcePower" parent="LeftHand" instance=ExtResource("8_force")]
+
 [node name="LeftHand" parent="LeftHand" unique_id=1494601185 instance=ExtResource("3_52ee3")]
 
 [node name="RightHand" type="XRController3D" parent="." unique_id=978039126]
@@ -34,6 +37,8 @@ tracker = &"right_hand"
 grab_collision_mask = 327700
 
 [node name="MovementTurn" parent="RightHand" unique_id=538639114 instance=ExtResource("4_5ixxa")]
+
+[node name="ForcePower" parent="RightHand" instance=ExtResource("8_force")]
 
 [node name="RightHand" parent="RightHand" unique_id=461344328 instance=ExtResource("5_bhhdu")]
 

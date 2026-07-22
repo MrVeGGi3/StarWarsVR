@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cjs2jfb73d0lb"]
+
+[ext_resource type="Script" uid="uid://6b7pr2oix505" path="res://Scripts/Force/force_power.gd" id="1_force"]
+
+[node name="ForcePower" type="Node3D" unique_id=1577378570]
+script = ExtResource("1_force")
