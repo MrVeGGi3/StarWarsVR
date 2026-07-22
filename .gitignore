@@ -6,3 +6,6 @@
 *.apk
 *.aab
 export_presets.cfg.bak
+
+# Heavy source assets kept out of the repo; see Credits.md for their sources
+Models/
