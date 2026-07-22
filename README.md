@@ -1,6 +1,6 @@
 # StarWarsVR : Godot 4 Prototype
 
-> A VR combat simulation focused on realistic lightsaber physics, vector-based projectile deflection, and immersive interactions. Built with **Godot 4** and **Godot XR Tools**
+> A VR combat simulation focused on realistic lightsaber physics, vector-based projectile deflection, Force powers, and immersive interactions. Built with **Godot 4** and **Godot XR Tools**
 
 This project serves as a technical case study on advanced VR mechanics. The goal is not just to recreate the visual fidelity of Star Wars, but to capture the **"Game Feel"** of Jedi combat by solving common VR development challenges such as *object tunneling* and imprecise *haptic feedback*.
 
@@ -22,6 +22,46 @@ The controller vibration system responds dynamically to player actions:
 * **Ignition:** High-amplitude, low-frequency (60Hz) pulse to simulate the raw energy surge.
 * **Retraction:** Short, high-frequency pulse for the mechanical "power down" sensation.
 
+### 🤚 Hand-Locked Saber & Belt Holster
+The saber behaves like a weapon you commit to, not a prop you juggle:
+* **Stuck to the hand:** Once drawn, the holding hand's pickup is disabled while no holster is in
+  range, so releasing the grip never drops the blade mid-fight.
+* **Belt holster:** Bringing the hilt back inside a hip snap-zone re-enables the grip and a press
+  stows the saber; distance is measured from the active grab-point so the hilt collider is always
+  overlapping the zone when the drop fires.
+* **Draw-to-ignite:** Pulling the saber from the belt ignites the blade automatically; picking it
+  up off the floor leaves it as it was.
+
+### 🙌 Two-Handed Grip (Djem So)
+The free hand can grab the hilt for a braced, two-handed stance:
+* **Aim drive:** The second hand steadies and steers the blade's orientation via XR Tools' grab
+  drive, giving a heavier, more deliberate guard.
+* **Stronger block:** A deflection performed two-handed returns the bolt tighter and faster than a
+  one-handed parry.
+* **Hand swapping:** A single re-sync keeps the lock, the blade button and the forced grip on
+  whichever hand is primary after either hand lets go.
+
+### ✋ Force Push & Pull
+Gesture-driven telekinesis on the empty hand (the saber hand cannot use the Force; both hands free
+boosts the power):
+* **Push:** Hold the trigger and thrust the controller forward to blast everything in a cone away
+  from the palm.
+* **Pull:** Trigger plus grip locks onto the object nearest the aim line, floats it to the palm,
+  and releasing with a shove throws it.
+* **Cheap targeting:** Candidates are filtered by squared distance and a dot-product against the
+  aim — no physics queries — so the cost stays flat as the scene fills up.
+
+### 🤖 Training Remote AI
+A Jedi training droid that circles and tests the player:
+* **State loop:** Orbits at head height varying altitude and distance, stops, draws one of eight
+  firing ports, swings it onto the player behind a red charge-up telegraph, then fires — or feints,
+  breaking off without a shot.
+* **Bursts & heights:** Fires up to three shots per stop, each at a fresh band (head, chest,
+  thigh). Aim heights are fractions of the player's head-above-floor height with a posture-aware
+  floor clamp, so a **seated** player is never shot at the feet.
+* **Spatial audio:** A looping hover whose pitch rides the orbit speed, a servo click on stop, and
+  a charge/shot pair emitted from the drawn port so the shot can be located by ear.
+
 ## 🛠️ Tech Stack
 
 * **Engine:** Godot 4.6 (GDScript)
@@ -42,10 +82,13 @@ it exit when no OpenXR runtime is found.
 
 | Action | Input |
 | --- | --- |
-| Grab / release the saber | Grip on either controller |
+| Draw the saber from the belt | Grip near a hip snap-zone (auto-ignites) |
 | Ignite / retract the blade | `by_button` (B / Y) while holding the saber |
+| Stow the saber | Bring the hilt to a hip snap-zone and press grip |
+| Two-handed grip | Grab the hilt with the free hand |
+| Force Push | Hold the trigger and thrust the hand forward (empty hand) |
+| Force Pull / throw | Trigger + grip to pull, release with a shove to throw (empty hand) |
 | Move / turn | Left stick / right stick |
-| Holster | Bring the saber to the snap zone at the waist |
 
 ## 📸 Showcase of Actual Status
 
@@ -56,10 +99,9 @@ it exit when no OpenXR runtime is found.
 ## 🚧 Roadmap & Future Improvements
 
 ### ✅ To-Do (Upcoming Features)
-- [ ] **Advanced Enemy AI:** Implement behavior trees for enemies to flank and take cover instead of standing still.
-- [ ] **Force Powers:** Add gesture-based recognition for "Force Push" and "Force Pull".
-- [ ] **Spatial Audio:** Tune the 3D attenuation curves and unit sizes (the saber players are now `AudioStreamPlayer3D`, but still on default falloff).
+- [ ] **Advanced Enemy AI:** The training remote orbits, telegraphs and feints; next is enemies that flank and take cover. The `force_push()` hook is already in place for when they need to react to a shove.
 - [ ] **Destructible Environment:** Allow lightsaber marks on walls and floors (Decal system).
+- [ ] **Saber SFX polish:** Charge/servo/hover streams are wired on the droid; still need charge and travel sounds on the saber and bolts.
 
 
 ### 🔧 Polishing & Fixes
@@ -69,6 +111,14 @@ it exit when no OpenXR runtime is found.
 
 ### 🐛 Known Issues
 - *Physics Jitter:* Rare physics instability when the saber collides with complex geometry at high speeds.
+
+### ✔️ Recently Added
+- **Force Push & Pull** on the empty hand, with an empty-hands power boost.
+- **Two-handed grip** with aim-drive stabilisation and a stronger deflection.
+- **Training remote AI** (orbit, telegraph, burst, feint) with posture-aware aim heights and
+  positional audio.
+- **Hand-locked saber + belt holster**, drawing from the belt auto-ignites the blade.
+- **Per-shooter bolt colour** (yellow training bolts vs red turret bolts).
 
 ### ✔️ Recently Fixed
 - **Hand Pose / Snap Zone:** both traced to the same root cause — `LightSaberSettings._ready()`
