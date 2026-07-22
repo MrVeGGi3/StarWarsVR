@@ -46,6 +46,11 @@ var _holding_pickup : XRToolsFunctionPickup = null
 ## would follow the real grip and open up while the saber stays stuck to the palm.
 var _holding_hand : XRToolsHand = null
 
+## Hand mesh of the second hand, when the saber is held two-handed. Closed over
+## the hilt the same way, and its presence is what a blaster reads as a stronger,
+## Djem So style block through [method is_two_handed].
+var _second_hand : XRToolsHand = null
+
 ## Holster the hilt is currently close enough to stow into, if any.
 var _holster_in_range : XRToolsSnapZone = null
 
@@ -69,6 +74,12 @@ func _ready() -> void:
 
 	picked_up.connect(_on_picked_up)
 	dropped.connect(_on_dropped)
+
+	# grabbed/released fire for BOTH hands and for a primary/secondary swap, which
+	# picked_up/dropped do not. Rebinding the hands on these keeps the lock and the
+	# blade button on whichever hand is actually primary after a two-handed swap.
+	grabbed.connect(_on_grab_changed)
+	released.connect(_on_grab_changed)
 
 	_recall_timer = Timer.new()
 	_recall_timer.one_shot = true
@@ -99,19 +110,7 @@ func _on_picked_up(_pickable) -> void:
 	if zone:
 		home_zone = zone
 
-	# Null when a snap zone is the one holding us; only hands can be locked.
-	_holding_pickup = get_picked_up_by() as XRToolsFunctionPickup
-
-	if _holding_pickup:
-		_holding_hand = XRToolsHand.find_instance(_holding_pickup)
-		if _holding_hand:
-			# Grip only: the trigger keeps following the real input.
-			_holding_hand.force_grip_trigger(1.0)
-
-	actual_controller = get_picked_up_by_controller()
-
-	if actual_controller:
-		actual_controller.button_pressed.connect(_on_controller_button_pressed)
+	_sync_hands()
 
 	# Drawing from the belt ignites the blade. Picking the saber up off the floor
 	# leaves it as it was.
@@ -121,22 +120,16 @@ func _on_picked_up(_pickable) -> void:
 	_was_holstered = zone != null
 
 
+func _on_grab_changed(_pickable, _by) -> void:
+	_sync_hands()
+
+
 func _on_dropped(_pickable) -> void:
-	if actual_controller and actual_controller.button_pressed.is_connected(_on_controller_button_pressed):
-		actual_controller.button_pressed.disconnect(_on_controller_button_pressed)
+	# The grab driver is already gone here, so _sync_hands restores both hands'
+	# grips, re-enables the pickup and clears the state.
+	_sync_hands()
 
-	# Hand the grip back, whatever released us: a stow, the recall, or a scene exit.
-	if is_instance_valid(_holding_pickup):
-		_holding_pickup.enabled = true
-
-	if is_instance_valid(_holding_hand):
-		_holding_hand.force_grip_trigger()
-
-	_holding_pickup = null
-	_holding_hand = null
 	_holster_in_range = null
-
-	actual_controller = null
 	toggle_lightsaber(false)
 
 	# A hand taking the saber out of the holster also fires this, but it picks
@@ -144,6 +137,60 @@ func _on_dropped(_pickable) -> void:
 	if recall_delay > 0.0 and is_instance_valid(home_zone):
 		_recall_retries = 0
 		_recall_timer.start(recall_delay)
+
+
+## Rebinds which hand is primary (locked to the saber, blade button, forced grip)
+## and which is secondary (forced grip), from the live grab state. Safe and
+## idempotent on every grab change: first pickup, a second hand grabbing, either
+## hand letting go, and the full drop.
+func _sync_hands() -> void:
+	# Null when a snap zone holds us: only hands are locked and gripped.
+	var primary_pickup := get_picked_up_by() as XRToolsFunctionPickup
+	var primary_controller := get_picked_up_by_controller()
+	var primary_hand : XRToolsHand = null
+	if primary_pickup:
+		primary_hand = XRToolsHand.find_instance(primary_pickup)
+
+	var secondary_grab = _grab_driver.secondary if _grab_driver else null
+	var second_hand : XRToolsHand = null
+	if secondary_grab:
+		var second_pickup := secondary_grab.by as XRToolsFunctionPickup
+		if second_pickup:
+			second_hand = XRToolsHand.find_instance(second_pickup)
+
+	# Blade toggle and haptics follow the primary controller across a hand swap.
+	if primary_controller != actual_controller:
+		if actual_controller and actual_controller.button_pressed.is_connected(_on_controller_button_pressed):
+			actual_controller.button_pressed.disconnect(_on_controller_button_pressed)
+		actual_controller = primary_controller
+		if actual_controller:
+			actual_controller.button_pressed.connect(_on_controller_button_pressed)
+
+	# Any hand that just let go gets its real grip animation back.
+	for hand in [_holding_hand, _second_hand]:
+		if is_instance_valid(hand) and hand != primary_hand and hand != second_hand:
+			hand.force_grip_trigger()
+
+	# A former primary that is no longer primary must be re-enabled, or the lock
+	# would strand its pickup disabled.
+	if is_instance_valid(_holding_pickup) and _holding_pickup != primary_pickup:
+		_holding_pickup.enabled = true
+
+	_holding_pickup = primary_pickup
+	_holding_hand = primary_hand
+	_second_hand = second_hand
+
+	# Close both holding hands over the hilt (visual; input is still read).
+	if is_instance_valid(_holding_hand):
+		_holding_hand.force_grip_trigger(1.0)
+	if is_instance_valid(_second_hand):
+		_second_hand.force_grip_trigger(1.0)
+
+
+## True while both hands hold the saber. A two-handed grip stiffens the blade,
+## which a deflecting blaster reads to return the bolt harder and tighter.
+func is_two_handed() -> bool:
+	return _grab_driver != null and _grab_driver.primary != null and _grab_driver.secondary != null
 
 
 ## Keeps the saber stuck to the hand: the holding hand's pickup function is only

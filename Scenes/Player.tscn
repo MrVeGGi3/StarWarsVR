@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://raeeicvvindd" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_hand.tscn" id="5_bhhdu"]
 [ext_resource type="PackedScene" uid="uid://rt5ooq53iec6" path="res://Scenes/LightSaber/LightSaberSnapZone.tscn" id="7_52ee3"]
 [ext_resource type="PackedScene" path="res://Scenes/Force/ForcePower.tscn" id="8_force"]
+[ext_resource type="PackedScene" uid="uid://ulfn5mq72vwi" path="res://Scenes/LightSaber/LightSaber.tscn" id="9_saber"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kyqiw"]
 height = 2.3850098
@@ -55,6 +56,9 @@ shape = SubResource("CapsuleShape3D_kyqiw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29896194, 1.00359, -0.18439716)
 collision_layer = 16
 collision_mask = 65540
+initial_object = NodePath("LightSaber")
+
+[node name="LightSaber" parent="PlayerBody/LightSaberSnapZone" instance=ExtResource("9_saber")]
 
 [node name="LightSaberSnapZone2" parent="PlayerBody" unique_id=1397785363 instance=ExtResource("7_52ee3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.30402878, 0.99822795, -0.17382097)

@@ -531,6 +531,7 @@ freeze_mode = 1
 angular_damp = 6.0
 script = ExtResource("1_66enu")
 press_to_hold = false
+second_hand_grab = 2
 animation_settings = NodePath("AnimationSettings")
 audios_manager = NodePath("Audios")
 
@@ -593,10 +594,12 @@ bus = &"SFX"
 [node name="GrabPointHandLeft" parent="." unique_id=784240625 instance=ExtResource("15_t1jmm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011996508, -0.18420453, -0.10496259)
 visible = true
+drive_aim = 0.5
 
 [node name="GrabPointHandRight" parent="." unique_id=363366197 instance=ExtResource("16_1dxh3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.010583773, -0.18446028, -0.10130197)
 visible = true
+drive_aim = 0.5
 
 [node name="GrabPointSnap" parent="." unique_id=818749084 instance=ExtResource("13_kku0w")]
 
