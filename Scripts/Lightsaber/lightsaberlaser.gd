@@ -39,6 +39,20 @@ var last_position := Vector3.ZERO
 var _recall_timer : Timer
 var _recall_retries := 0
 
+## Pickup function of the hand holding the saber; null while a snap zone holds it.
+var _holding_pickup : XRToolsFunctionPickup = null
+
+## Hand mesh of the holder. The grab points carry no hand pose, so the fingers
+## would follow the real grip and open up while the saber stays stuck to the palm.
+var _holding_hand : XRToolsHand = null
+
+## Holster the hilt is currently close enough to stow into, if any.
+var _holster_in_range : XRToolsSnapZone = null
+
+## True while a snap zone is the holder, so the next hand pickup knows the saber
+## is being drawn from the belt rather than picked up off the floor.
+var _was_holstered := false
+
 
 func _ready() -> void:
 	# XRToolsPickable._ready() collects the child grab points. Skipping it
@@ -69,6 +83,8 @@ func _physics_process(delta: float) -> void:
 	velocity = (global_position - last_position) / delta
 	last_position = global_position
 
+	_update_hand_lock()
+
 
 func get_saber_velocity() -> Vector3:
 	return velocity
@@ -83,15 +99,42 @@ func _on_picked_up(_pickable) -> void:
 	if zone:
 		home_zone = zone
 
+	# Null when a snap zone is the one holding us; only hands can be locked.
+	_holding_pickup = get_picked_up_by() as XRToolsFunctionPickup
+
+	if _holding_pickup:
+		_holding_hand = XRToolsHand.find_instance(_holding_pickup)
+		if _holding_hand:
+			# Grip only: the trigger keeps following the real input.
+			_holding_hand.force_grip_trigger(1.0)
+
 	actual_controller = get_picked_up_by_controller()
 
 	if actual_controller:
 		actual_controller.button_pressed.connect(_on_controller_button_pressed)
 
+	# Drawing from the belt ignites the blade. Picking the saber up off the floor
+	# leaves it as it was.
+	if _holding_pickup and _was_holstered:
+		toggle_lightsaber(true)
+
+	_was_holstered = zone != null
+
 
 func _on_dropped(_pickable) -> void:
 	if actual_controller and actual_controller.button_pressed.is_connected(_on_controller_button_pressed):
 		actual_controller.button_pressed.disconnect(_on_controller_button_pressed)
+
+	# Hand the grip back, whatever released us: a stow, the recall, or a scene exit.
+	if is_instance_valid(_holding_pickup):
+		_holding_pickup.enabled = true
+
+	if is_instance_valid(_holding_hand):
+		_holding_hand.force_grip_trigger()
+
+	_holding_pickup = null
+	_holding_hand = null
+	_holster_in_range = null
 
 	actual_controller = null
 	toggle_lightsaber(false)
@@ -101,6 +144,60 @@ func _on_dropped(_pickable) -> void:
 	if recall_delay > 0.0 and is_instance_valid(home_zone):
 		_recall_retries = 0
 		_recall_timer.start(recall_delay)
+
+
+## Keeps the saber stuck to the hand: the holding hand's pickup function is only
+## live while a holster is within reach, so the grip can never drop the saber
+## anywhere else. XRToolsFunctionPickup ignores the grip entirely while disabled.
+func _update_hand_lock() -> void:
+	if not is_instance_valid(_holding_pickup):
+		return
+
+	var holster := _find_holster_in_range()
+
+	if holster:
+		# Only hand the grip back once it is released, otherwise reaching for the
+		# hip with the grip already squeezed would stow the saber by itself.
+		if not _holding_pickup.enabled and not _is_grip_held():
+			_holding_pickup.enabled = true
+
+		# Nudge the player when a holster becomes usable.
+		if holster != _holster_in_range:
+			vibrate_controller()
+	else:
+		_holding_pickup.enabled = false
+
+	_holster_in_range = holster
+
+
+## Finds an empty holster close enough to the hilt to stow the saber into.
+func _find_holster_in_range() -> XRToolsSnapZone:
+	var hilt := _hilt_position()
+
+	for node in get_tree().get_nodes_in_group("saber_holster"):
+		var zone := node as XRToolsSnapZone
+		if not is_instance_valid(zone) or not zone.enabled or zone.has_snapped_object():
+			continue
+
+		if hilt.distance_to(zone.global_position) <= zone.grab_distance:
+			return zone
+
+	return null
+
+
+## Where the hand actually holds the saber. Measuring from here (rather than the
+## body origin) guarantees the hilt collider overlaps the zone sphere, which is
+## what lets the zone catch the saber on the "dropped" signal.
+func _hilt_position() -> Vector3:
+	var point := get_active_grab_point()
+	return point.global_position if is_instance_valid(point) else global_position
+
+
+func _is_grip_held() -> bool:
+	if not actual_controller:
+		return false
+
+	return actual_controller.get_float(_holding_pickup.pickup_axis_action) > XRTools.get_grip_threshold()
 
 
 ## Returns the saber to its holster once it has been left lying around.
@@ -133,6 +230,10 @@ func toggle_lightsaber(force_state = null) -> void:
 		new_state = lightsaber_states.ON if force_state else lightsaber_states.OFF
 	else:
 		new_state = lightsaber_states.ON if current_lightsaber_state == lightsaber_states.OFF else lightsaber_states.OFF
+
+	# Already there: stowing a blade that is off must not replay the retraction.
+	if new_state == current_lightsaber_state:
+		return
 
 	current_lightsaber_state = new_state
 

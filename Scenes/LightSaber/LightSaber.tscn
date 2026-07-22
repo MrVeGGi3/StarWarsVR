@@ -530,6 +530,7 @@ physics_material_override = SubResource("PhysicsMaterial_saber")
 freeze_mode = 1
 angular_damp = 6.0
 script = ExtResource("1_66enu")
+press_to_hold = false
 animation_settings = NodePath("AnimationSettings")
 audios_manager = NodePath("Audios")
 
