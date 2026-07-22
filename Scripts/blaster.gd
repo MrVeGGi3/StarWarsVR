@@ -34,6 +34,10 @@ var origin_position : Vector3 = Vector3.ZERO
 var _active : bool = false
 var _time : float = 0.0
 
+## Looping sound of the bolt in flight, so the player can hear one coming.
+## Silent until a stream is dropped into the node.
+@onready var _travel : AudioStreamPlayer3D = get_node_or_null("Travel")
+
 @export_group("Reflect Settings")
 @export var deflect_mode : DeflectMode = DeflectMode.RETURN_TO_SENDER
 @export_range(1.0, 3.0) var speed_multiplier : float = 1.5 # Speed-up per deflection
@@ -44,6 +48,14 @@ var _time : float = 0.0
 @export var swing_speed_for_perfect : float = 2.0
 ## Worst-case aim error when the blade is completely still, in degrees.
 @export_range(0.0, 90.0) var max_return_deviation : float = 25.0
+
+@export_subgroup("Two-Handed")
+## Return aim error is scaled by this while the saber is held two-handed: below
+## 1.0 the steadier grip returns bolts tighter (Djem So power block).
+@export_range(0.0, 1.0) var two_hand_deviation_scale : float = 0.4
+## Extra speed multiplier applied to a two-handed deflection, on top of the
+## normal one, so a braced block sends the bolt back harder.
+@export var two_hand_speed_bonus : float = 1.35
 
 @export_subgroup("Vector")
 @export_range(0.0, 2.0) var swing_power : float = 0.5 # How hard the arm pushes the bolt
@@ -56,6 +68,12 @@ func _ready() -> void:
 	# reinterpret the local transform as global and teleport the bolt.
 	top_level = true
 	speed = start_speed
+
+	# The bolt outlives its own sound, so the travel loop has to loop however
+	# the file was imported.
+	if _travel and _travel.stream and "loop" in _travel.stream:
+		_travel.stream.loop = true
+
 	deactivate()
 
 
@@ -106,6 +124,23 @@ func _find_saber_root(from: Node) -> Node:
 	return null
 
 
+## Tints this bolt. The colour belongs to whoever fired it (see
+## [member Turret.bolt_color]), so the material is duplicated onto this instance
+## rather than tinting the one shared by every Blaster scene.
+func set_bolt_color(color : Color) -> void:
+	var mesh_instance := get_node_or_null("MeshInstance3D") as MeshInstance3D
+	if not mesh_instance or not mesh_instance.mesh:
+		return
+
+	var material := mesh_instance.mesh.material as ShaderMaterial
+	if not material:
+		return
+
+	var unique := material.duplicate() as ShaderMaterial
+	unique.set_shader_parameter("glow_color", color)
+	mesh_instance.material_override = unique
+
+
 func is_active() -> bool:
 	return _active
 
@@ -115,6 +150,9 @@ func deactivate() -> void:
 	visible = false
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
+
+	if _travel and _travel.playing:
+		_travel.stop()
 
 
 func activate(start_position : Vector3, start_rotation : Vector3, p_origin : Node3D = null) -> void:
@@ -134,17 +172,27 @@ func activate(start_position : Vector3, start_rotation : Vector3, p_origin : Nod
 	set_deferred("monitorable", true)
 	set_deferred("monitoring", true)
 
+	if _travel and _travel.stream:
+		_travel.play()
+
 
 func reflect(blade : Node3D, saber : Node) -> void:
 	var saber_velocity : Vector3 = saber.get_saber_velocity()
 
+	# A two-handed grip stiffens the block: tighter aim and more speed on return.
+	var two_handed : bool = saber.has_method("is_two_handed") and saber.is_two_handed()
+
 	match deflect_mode:
 		DeflectMode.RETURN_TO_SENDER:
-			direction = _return_direction(saber_velocity)
+			direction = _return_direction(saber_velocity, two_handed)
 		_:
 			direction = _ricochet_direction(blade, saber_velocity)
 
-	speed = minf(speed * speed_multiplier, max_speed)
+	var multiplier := speed_multiplier
+	if two_handed:
+		multiplier *= two_hand_speed_bonus
+
+	speed = minf(speed * multiplier, max_speed)
 	_time = 0.0 # A deflected bolt gets a fresh lifetime
 
 	# Step clear of the blade so the next ray does not hit it again.
@@ -165,7 +213,7 @@ func reflect(blade : Node3D, saber : Node) -> void:
 
 ## Sends the bolt back down its own firing line. A still blade only deflects it
 ## roughly homewards; the faster the blade is moving, the tighter the return.
-func _return_direction(saber_velocity: Vector3) -> Vector3:
+func _return_direction(saber_velocity: Vector3, two_handed: bool = false) -> Vector3:
 	var target := origin_position
 	if is_instance_valid(origin_node):
 		target = origin_node.global_position
@@ -175,8 +223,12 @@ func _return_direction(saber_velocity: Vector3) -> Vector3:
 		# Already on top of the shooter, nothing sensible to aim at.
 		return -direction
 
+	var deviation := max_return_deviation
+	if two_handed:
+		deviation *= two_hand_deviation_scale
+
 	var accuracy := clampf(saber_velocity.length() / swing_speed_for_perfect, 0.0, 1.0)
-	return _spread(to_origin.normalized(), deg_to_rad(max_return_deviation) * (1.0 - accuracy))
+	return _spread(to_origin.normalized(), deg_to_rad(deviation) * (1.0 - accuracy))
 
 
 ## Rotates a direction by a random angle up to `spread`, around a random axis
