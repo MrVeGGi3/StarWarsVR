@@ -92,6 +92,8 @@ it exit when no OpenXR runtime is found.
 
 ## 📸 Showcase of Actual Status
 
+> ⚠️ **Outdated — needs updating.** The capture below predates the training remote,
+> Force powers, and the two-handed grip. New footage still to be recorded.
 
 ![StarWarsVR](https://github.com/user-attachments/assets/f56eefba-e875-43bd-9eea-3e36b7370151)
 
