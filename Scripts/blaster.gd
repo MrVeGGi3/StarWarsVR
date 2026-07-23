@@ -34,9 +34,17 @@ var origin_position : Vector3 = Vector3.ZERO
 var _active : bool = false
 var _time : float = 0.0
 
+## Halo colour of this bolt, kept so the impact burst can match it. Overwritten
+## by [method set_bolt_color] when the shooter tints the bolt.
+var _bolt_color : Color = Color(1, 0.1, 0.1)
+
 ## Looping sound of the bolt in flight, so the player can hear one coming.
 ## Silent until a stream is dropped into the node.
 @onready var _travel : AudioStreamPlayer3D = get_node_or_null("Travel")
+
+## One-shot spark burst reused with this pooled bolt. Emits in world space
+## (local_coords off), so a burst finishes even after the bolt is recycled.
+@onready var _impact_particles : GPUParticles3D = get_node_or_null("ImpactParticles")
 
 @export_group("Reflect Settings")
 @export var deflect_mode : DeflectMode = DeflectMode.RETURN_TO_SENDER
@@ -101,6 +109,7 @@ func _physics_process(delta: float) -> void:
 			reflect(collider, saber)
 		else:
 			# Hilt, wall, floor or player: the bolt is absorbed.
+			_burst(result.position, result.normal, _bolt_color, 1.4)
 			deactivate()
 			return
 	else:
@@ -140,9 +149,39 @@ func set_bolt_color(color : Color) -> void:
 	unique.set_shader_parameter("glow_color", color)
 	mesh_instance.material_override = unique
 
+	_bolt_color = color
+
 
 func is_active() -> bool:
 	return _active
+
+
+## Fires the one-shot spark burst at `at`, sprayed outward along `along` (a
+## surface normal, or the reverse of travel for a deflection), tinted `color` at
+## `energy`. No-op when the scene carries no ImpactParticles node.
+func _burst(at : Vector3, along : Vector3, color : Color, energy : float) -> void:
+	if not _impact_particles:
+		return
+
+	_impact_particles.global_position = at
+
+	# The process material fires along local -Z, and look_at points -Z at its
+	# target, so the sparks spray away from whatever the bolt struck. Skip the
+	# aim when the direction is degenerate or parallel to up (look_at would fail).
+	if along.length_squared() > 0.000001 and absf(along.normalized().dot(Vector3.UP)) < 0.999:
+		_impact_particles.look_at(at + along)
+
+	# The material is unshaded + additive, so albedo is what actually gets drawn;
+	# emission would need emission_enabled and is bypassed here. `energy` is a
+	# modest brightness boost — kept low so the hue survives instead of the
+	# additive blend clamping every channel to white.
+	var mat := _impact_particles.material_override as StandardMaterial3D
+	if mat:
+		mat.albedo_color = Color(color.r * energy, color.g * energy, color.b * energy, 1.0)
+
+	# restart() re-fires the one-shot burst; the bolt can deactivate right after
+	# because local_coords is off and the sparks live in world space.
+	_impact_particles.restart()
 
 
 func deactivate() -> void:
@@ -177,6 +216,14 @@ func activate(start_position : Vector3, start_rotation : Vector3, p_origin : Nod
 
 
 func reflect(blade : Node3D, saber : Node) -> void:
+	# The clash flash bursts in the blade's own colour, so any crystal reads
+	# right; a saber that exposes no colour falls back inside get_blade_color().
+	# Fired before the bolt is nudged clear of the blade.
+	var flash_color := Color(1, 0.95, 0.8)
+	if saber.has_method("get_blade_color"):
+		flash_color = saber.get_blade_color()
+	_burst(global_position, -direction, flash_color, 2.0)
+
 	var saber_velocity : Vector3 = saber.get_saber_velocity()
 
 	# A two-handed grip stiffens the block: tighter aim and more speed on return.

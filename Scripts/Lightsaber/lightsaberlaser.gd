@@ -101,6 +101,25 @@ func get_saber_velocity() -> Vector3:
 	return velocity
 
 
+## Colour of this blade's glow, read live from the blade shader so each saber —
+## whatever its kyber crystal — reports its own, and a colour changed at runtime
+## is picked up too. Returns white-hot when the blade node or its shader
+## parameter is missing, so callers never have to special-case a saber.
+func get_blade_color() -> Color:
+	const FALLBACK := Color(1, 0.95, 0.8)
+
+	var mesh := get_node_or_null("Area3D/MeshInstance3D") as MeshInstance3D
+	if not mesh:
+		return FALLBACK
+
+	var material := mesh.get_active_material(0) as ShaderMaterial
+	if not material:
+		return FALLBACK
+
+	var value = material.get_shader_parameter("glow_color")
+	return value if value is Color else FALLBACK
+
+
 func _on_picked_up(_pickable) -> void:
 	_recall_timer.stop()
 
